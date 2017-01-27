@@ -35,7 +35,7 @@ uploadArchives {
 
 repositories {
    flatDir {
-       dirs 'C:/Users/Dan/javalib'
+       dirs System.properties['user.home'] + '/javalib'
    }
 }
 

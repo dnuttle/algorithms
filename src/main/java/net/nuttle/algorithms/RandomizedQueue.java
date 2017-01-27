@@ -6,11 +6,10 @@ import java.util.NoSuchElementException;
 import edu.princeton.cs.algs4.StdOut;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
-
   private Item[] items;
   private int size;
   private int head;
-  private int tail = 1;
+  private int tail;
   
   @SuppressWarnings("unchecked")
   public RandomizedQueue() {
@@ -19,13 +18,64 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
   
   public static void main(String[] args) {
     RandomizedQueue<String> q = new RandomizedQueue<>();
-    q.enqueue("a");
-    q.enqueue("b");
-    q.enqueue("c");
-    q.enqueue("d");
-    for (String s : q) {
-      StdOut.println(s);
+    q.enqueue("a"); //[a]
+    q.print();
+    q.enqueue("b"); //[a b]
+    q.print();
+    q.enqueue("c"); //[a b c *]
+    q.print();
+    q.enqueue("d"); //[a b c d]
+    q.print();
+    q.dequeue();    //[* b c d]
+    q.print();
+    q.dequeue();    //[* * c d]
+    q.print();
+    q.enqueue("e"); //[e * c d]
+    q.print();
+    q.enqueue("f"); //[e f c d]
+    q.print();
+    q.dequeue();    //[e f * d]
+    q.print();
+    q.dequeue();    //[e f * *]
+    q.print();
+    q.dequeue();    //[* f]
+    q.print();
+    q.dequeue();    //[]
+    q.print();
+    q.enqueue("g"); //[g]
+    q.print();
+    q.enqueue("h"); //[g h]
+    q.print();
+    q.dequeue();    //[* h]
+    q.print();
+  }
+  
+  private void print() {
+    StringBuilder sb = new StringBuilder("[");
+    String prefix = "";
+    for (Item i : this) {
+      sb.append(prefix).append(i);
+      prefix = ", ";
     }
+    sb.append("], [");
+    prefix = "";
+    for (int i = 0; i < items.length; i++) {
+      if (items[i] == null) {
+        sb.append(prefix).append("*");
+      } else {
+        sb.append(prefix);
+        if (i == head) {
+          sb.append("{h}");
+        }
+        if (i == tail) {
+          sb.append("{t}");
+        }
+        sb.append(items[i]);
+      }
+      prefix = ", ";
+    }
+    sb.append("]");
+    StdOut.println(sb.toString());
   }
   
   public boolean isEmpty() {
@@ -43,18 +93,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     if (size == items.length) {
       resize(2 * items.length);
     }
-    if (head < tail) {
-      if (tail == items.length + 1) {
-        tail = 0;
-        items[items.length - 1] = item;
-      } else {
-        items[tail++ - 1] = item;
-      }
-    } else if (head == tail) {
-      items[tail++] = item;
+    if (size == 0) {
+      head = 0;
+      tail = 0;
     } else {
-      items[tail++] = item;
+      if (head == items.length - 1) {
+        head = 0;
+      } else {
+        head++;
+      }
     }
+    items[head] = item;
     size++;
   }
   
@@ -62,18 +111,15 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     if (size == 0) {
       throw new NoSuchElementException("queue is empty");
     }
-    Item item;
-    if (tail > 0) {
-      item = items[tail - 1];
-      items[tail - 1] = null;
-      tail--;
+    Item item = items[tail];
+    items[tail] = null;
+    if (tail == items.length - 1) {
+      tail = 0;
     } else {
-      item = items[items.length - 1];
-      items[items.length - 1] = null;
-      tail = items.length;
+      tail++;
     }
     size--;
-    if (size <= items.length / 4) {
+    if (size > 0 && size <= items.length / 4) {
       resize(items.length / 2);
     }
     return item;
@@ -87,7 +133,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
   }
   
   public Iterator<Item> iterator() {
-    final int currInit = tail == 0 ? items.length - 1 : tail - 1;
+    final int currInit = tail;
     return new Iterator<Item>() {
       int curr = currInit;
       int count = 0;
@@ -95,19 +141,16 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return count < size;
       }
       public Item next() {
-        Item item;
         if (count == size) {
           throw new NoSuchElementException("queue is empty");
         }
-        if (curr == 0) {
-          item = items[items.length - 1];
+        Item item;
+        if (curr < items.length) {
+          item = items[curr];
+          curr++;
         } else {
-          item = items[curr - 1];
-        }
-        if (curr == 0) {
-          curr = items.length;
-        } else {
-          curr--;
+          item = items[0];
+          curr = 1;
         }
         count++;
         return item;
@@ -118,7 +161,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
   @SuppressWarnings("unchecked")
   private void resize(int capacity) {
     Item[] tmp = (Item[]) new Object[capacity];
-    if (head > tail) {
+    if (tail > head) {
       for (int i = head; i < items.length; i++) {
         tmp[i - head] = items[i];
       }
@@ -126,12 +169,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         tmp[i + head] = items[i];
       }
     } else {
-      for (int i = 0; i < size; i++) {
-        tmp[i] = items[i];
+      for (int i = tail; i < tail + size; i++) {
+        tmp[i - tail] = items[i];
       }
     }
-    head = 0;
-    tail = size + 1;
+    head = size - 1;
+    tail = 0;
     items = tmp;
   }
+
 }
