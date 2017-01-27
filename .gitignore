@@ -1,0 +1,8 @@
+.classpath
+.gradle/
+.project
+.settings/
+bin/
+build/
+*.zip
+src/test/resources/percolation
