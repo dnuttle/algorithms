@@ -1,11 +1,11 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-sourceCompatibility = 1.5
+sourceCompatibility = 1.8
 version = '1.0'
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Gradle Quickstart',
+        attributes 'Implementation-Title': 'Coursera Algorithms',
                    'Implementation-Version': version
     }
 }
@@ -43,8 +43,9 @@ repositories {
 dependencies {
    compile name: 'algs4'
 }
-
+/*
 checkstyle {
     sourceSets = [project.sourceSets.main]
 }
+*/
 
