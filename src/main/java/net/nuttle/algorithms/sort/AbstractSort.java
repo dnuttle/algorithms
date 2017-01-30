@@ -17,7 +17,7 @@ public abstract class AbstractSort<T extends Comparable<T>> implements Sort<T> {
   
   public static <T extends Comparable<T>> boolean isSorted(T[] items) {
     int n = items.length;
-    for (int i = 1; i < items.length; i++) {
+    for (int i = 1; i < n; i++) {
       if (less(items[i], items[i-1])) {
         return false;
       }
