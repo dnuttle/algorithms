@@ -1,4 +1,3 @@
-package net.nuttle.algorithms;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
