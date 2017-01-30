@@ -15,10 +15,10 @@ public abstract class AbstractSort<T extends Comparable<T>> implements Sort<T> {
     items[y] = tmp;
   }
   
-  public static <T> boolean isSorted(T[] items) {
+  public static <T extends Comparable<T>> boolean isSorted(T[] items) {
     int n = items.length;
     for (int i = 1; i < items.length; i++) {
-      if (less(i, i-1)) {
+      if (less(items[i], items[i-1])) {
         return false;
       }
     }
