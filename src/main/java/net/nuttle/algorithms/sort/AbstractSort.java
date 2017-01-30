@@ -1,6 +1,7 @@
 package net.nuttle.algorithms.sort;
 
 import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.Stopwatch;
 
 public abstract class AbstractSort<T extends Comparable<T>> implements Sort<T> {
 
@@ -24,15 +25,25 @@ public abstract class AbstractSort<T extends Comparable<T>> implements Sort<T> {
     return true;
   }
   
-  public static void testSort(Sort<Integer> sorter, int n) throws SortException {
+  /**
+   * Tests a sorter using Integers.  Returns the number of seconds elapsed.
+   * @param sorter
+   * @param n
+   * @return
+   * @throws SortException
+   */
+  public static double testSort(Sort<Integer> sorter, int n) throws SortException {
     Integer[] values = new Integer[n];
     for (int i = 0; i < n; i++) {
       values[i] = StdRandom.uniform(n);
     }
+    Stopwatch sw = new Stopwatch();
     sorter.sort(values);
+    double elapsed = sw.elapsedTime();
     if (!isSorted(values)) {
       throw new SortException("Sorter failed to sort properly");
     }
+    return elapsed;
   }
   
 }

@@ -4,7 +4,7 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class InsertionSort<T extends Comparable<T>> extends AbstractSort<T> implements Sort<T> {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SortException {
     String[] strings = new String[4];
     strings[0] = "d";
     strings[1] = "c";
@@ -15,6 +15,10 @@ public class InsertionSort<T extends Comparable<T>> extends AbstractSort<T> impl
     for (String s : strings) {
       StdOut.println(s);
     }
+    
+    Sort<Integer> si = new InsertionSort<>();
+    int n = 10000;
+    StdOut.println("Sorted " + n + " integers in " + testSort(si, n) + " seconds");
   }
   
   public void sort(T[]  items) {
