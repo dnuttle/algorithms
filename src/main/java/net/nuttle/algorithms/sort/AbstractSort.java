@@ -1,5 +1,6 @@
 package net.nuttle.algorithms.sort;
 
+import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.Stopwatch;
 
@@ -33,17 +34,44 @@ public abstract class AbstractSort<T extends Comparable<T>> implements Sort<T> {
    * @throws SortException
    */
   public static double testSort(Sort<Integer> sorter, int n) throws SortException {
+    return testSort(sorter, n, false);
+  }
+  
+  public static double testSort(Sort<Integer> sorter, int n, boolean debug) throws SortException {
     Integer[] values = new Integer[n];
     for (int i = 0; i < n; i++) {
       values[i] = StdRandom.uniform(n);
     }
-    Stopwatch sw = new Stopwatch();
-    sorter.sort(values);
-    double elapsed = sw.elapsedTime();
+    if (debug) {
+      printArray(values);
+    }
+    double elapsed = testSort(sorter, values);
+    if (debug) {
+      printArray(values);
+    }
     if (!isSorted(values)) {
       throw new SortException("Sorter failed to sort properly");
     }
     return elapsed;
+  }
+  
+  private static double testSort(Sort<Integer> sorter, Integer[] values) {
+    Stopwatch sw = new Stopwatch();
+    sorter.sort(values);
+    double elapsed = sw.elapsedTime();
+    return elapsed;
+  }
+
+  public static <T extends Comparable<T>> void printArray(T[] items) {
+    if (items.length > 100) {
+      StdOut.println("Array > 100, too long");
+      return;
+    }
+    StringBuilder sb = new StringBuilder();
+    for (T item : items) {
+      sb.append(item).append(" :|: ");
+    }
+    StdOut.println(sb.toString());
   }
   
 }
