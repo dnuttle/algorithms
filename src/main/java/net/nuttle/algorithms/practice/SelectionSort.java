@@ -1,9 +1,9 @@
-package net.nuttle.agorithms.sort.practice;
+package net.nuttle.algorithms.practice;
 
-import edu.princeton.cs.algs4.StdOut;
 import net.nuttle.algorithms.sort.AbstractSort;
 import net.nuttle.algorithms.sort.Sort;
 import net.nuttle.algorithms.sort.SortException;
+import edu.princeton.cs.algs4.StdOut;
 
 public class SelectionSort<T extends Comparable<T>> extends AbstractSort<T> implements Sort<T> {
 
@@ -15,6 +15,7 @@ public class SelectionSort<T extends Comparable<T>> extends AbstractSort<T> impl
   
   public void sort(T[] items) {
     int n = items.length;
+    
     for (int i = 0; i < n; i++) {
       int min = i;
       for (int j = i; j < n; j++) {
@@ -22,7 +23,9 @@ public class SelectionSort<T extends Comparable<T>> extends AbstractSort<T> impl
           min = j;
         }
       }
-      swap(i, min, items);
+      if (min != i) {
+        swap(min, i, items);
+      }
     }
   }
 }
