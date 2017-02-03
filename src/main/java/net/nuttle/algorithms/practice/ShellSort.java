@@ -1,9 +1,9 @@
-package net.nuttle.agorithms.sort.practice;
+package net.nuttle.algorithms.practice;
 
-import edu.princeton.cs.algs4.StdOut;
 import net.nuttle.algorithms.sort.AbstractSort;
 import net.nuttle.algorithms.sort.Sort;
 import net.nuttle.algorithms.sort.SortException;
+import edu.princeton.cs.algs4.StdOut;
 
 public class ShellSort<T extends Comparable<T>> extends AbstractSort<T> implements Sort<T> {
 

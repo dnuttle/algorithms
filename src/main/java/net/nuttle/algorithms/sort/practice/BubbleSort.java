@@ -1,4 +1,4 @@
-package net.nuttle.agorithms.sort.practice;
+package net.nuttle.algorithms.sort.practice;
 
 import edu.princeton.cs.algs4.StdOut;
 import net.nuttle.algorithms.sort.AbstractSort;

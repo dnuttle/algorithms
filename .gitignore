@@ -6,4 +6,4 @@ bin/
 build/
 *.zip
 src/test/resources/percolation
-src/main/java/net/nuttle/algorithms/practice
+src/main/java/*.*/practice
