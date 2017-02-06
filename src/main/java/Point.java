@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.Comparator;
 
 import edu.princeton.cs.algs4.StdDraw;
@@ -16,6 +17,13 @@ public class Point implements Comparable<Point> {
   public void draw() {
     StdDraw.setPenRadius(0.01);
     StdDraw.point(x, y);
+  }
+  
+  private void drawBig() {
+    StdDraw.setPenRadius(0.02);
+    StdDraw.setPenColor(Color.RED);
+    StdDraw.point(x, y);
+    StdDraw.setPenColor();
   }
   
   public void drawTo(Point that) {
@@ -57,17 +65,23 @@ public class Point implements Comparable<Point> {
   }
   
   public Comparator<Point> slopeOrder() {
-    return new SlopeComparator();
+    return new SlopeComparator(this);
   }
   
-  private static class SlopeComparator implements Comparator<Point> {
+  private class SlopeComparator implements Comparator<Point> {
+    
+    Point p;
+    
+    public SlopeComparator(Point p) {
+      this.p = p;
+      //StdOut.println("Comparator point: " + p);
+    }
     @Override
     public int compare(Point p1, Point p2) {
-      double slope = p1.slopeTo(p2);
-      if (slope > 0) {
+      //StdOut.println("p1: " + p1 + "(" + p.slopeTo(p1) + ") p2: " + p2 + "(" + p.slopeTo(p2) + ")");
+      if (p.slopeTo(p1) > p.slopeTo(p2)) {
         return 1;
-      }
-      if (slope < 0) {
+      } else if (p.slopeTo(p1) < p.slopeTo(p2)) {
         return -1;
       }
       return 0;

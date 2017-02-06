@@ -7,8 +7,9 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class BruteCollinearPoints {
 
-  private LineSegment[] segments;
-  private List<LineSegment> segmentList = new ArrayList<>();
+  private LineSegment[] segments = new LineSegment[1];
+  private List<SegmentPoints> segpoints = new ArrayList<>();
+  private int size;
   
   public BruteCollinearPoints(Point[] points) {
     if (points == null) {
@@ -21,12 +22,12 @@ public class BruteCollinearPoints {
       //points[i].draw();
       //StdOut.println(points[i].toString());
     }
-    for (int i = 0; i < points.length - 3; i++) {
-      for (int j = i + 1; j < points.length - 2; j++) {
+    for (int i = 0; i < points.length; i++) {
+      for (int j = i + 1; j < points.length; j++) {
         if (points[i].compareTo(points[j]) == 0) {
           throw new IllegalArgumentException("points cannot be duplicates");
         }
-        for (int k = j + 1; k < points.length - 1; k++) {
+        for (int k = j + 1; k < points.length; k++) {
           for (int l = k + 1; l < points.length; l++) {
             double slope = points[i].slopeTo(points[j]);
             if (points[j].slopeTo(points[k]) == slope && 
@@ -44,8 +45,13 @@ public class BruteCollinearPoints {
         }
       }
     }
-    this.segments = segmentList.toArray(new LineSegment[0]);
-    segmentList = null;
+    if (size < segments.length) {
+      LineSegment[] tmp = new LineSegment[size];
+      for (int i = 0; i < size; i++) {
+        tmp[i] = segments[i];
+      }
+      segments = tmp;
+    }
   }
   
   private void addSegment(Point i, Point j, Point k, Point l) {
@@ -69,24 +75,34 @@ public class BruteCollinearPoints {
     if (l.compareTo(max) > 0) {
       max = l;
     }
-    LineSegment ls = new LineSegment(min, max);
-    for (LineSegment curr : segmentList) {
-      if (curr.equals(ls)) {
+    for (SegmentPoints pts : segpoints) {
+      if (pts.p.compareTo(min) == 0 && pts.q.compareTo(max) == 0) {
         return;
       }
     }
-    segmentList.add(ls);
+    LineSegment segment = new LineSegment(min, max);
+    SegmentPoints pts = new SegmentPoints(min, max);
+    segpoints.add(pts);
+    if (size >= segments.length) {
+      LineSegment[] tmp = new LineSegment[segments.length * 2];
+      for (int m = 0; m < size; m++) {
+        tmp[m] = segments[m];
+      }
+      segments = tmp;
+    }
+    segments[size] = segment;
+    size++;
   }
   
   public static void main(String[] args) {
     StdDraw.setScale(0, 50000);
     int[] values = StdIn.readAllInts();
     int n = values[0];
-    List<Point> points = new ArrayList<>();
+    Point[] points = new Point[n];
     for (int i = 1; i <= n*2; i += 2) {
-      points.add(new Point(values[i], values[i+1]));
+      points[i / 2] = new Point(values[i], values[i + 1]);
     }
-    BruteCollinearPoints bcp = new BruteCollinearPoints(points.toArray(new Point[0]));
+    BruteCollinearPoints bcp = new BruteCollinearPoints(points);
     StdOut.println("Line segments found: " + bcp.numberOfSegments());
     for (LineSegment segment : bcp.segments()) {
       StdOut.println(segment.toString());
@@ -95,10 +111,38 @@ public class BruteCollinearPoints {
   }
   
   public int numberOfSegments() {
-    return segments.length;
+    return size;
   }
   
   public LineSegment[] segments() {
-    return segments;
+    LineSegment[] ret = new LineSegment[segments.length];
+    for (int i = 0; i < segments.length; i++) {
+      ret[i] = segments[i];
+    }
+    return ret;
   }
+  private class SegmentPoints implements Comparable<SegmentPoints> {
+    private Point p;
+    private Point q;
+    public SegmentPoints(Point p, Point q) {
+      this.p = p;
+      this.q = q;
+    }
+    
+    @Override
+    public String toString() {
+      return p.toString() + ", " + q.toString();
+    }
+    
+    @Override
+    public int compareTo(SegmentPoints that) {
+      if (p.compareTo(that.p) == 0 && q.compareTo(that.q) == 0) {
+        return 0;
+      }
+      return 1;
+    }
+    
+  }
+
+
 }
