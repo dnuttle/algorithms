@@ -2,7 +2,6 @@ package net.nuttle.algorithms.sort;
 
 import static net.nuttle.algorithms.sort.AbstractSort.less;
 import static net.nuttle.algorithms.sort.AbstractSort.swap;
-
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.Stopwatch;
@@ -98,6 +97,7 @@ public class Sorter {
   
   public static <T extends Comparable<T>> void mergeSort(T[] items) {
     int n = items.length;
+    @SuppressWarnings("unchecked")
     T[] aux = (T[]) new Comparable[n];
     sort(items, aux, 0, n - 1);
   }
@@ -125,8 +125,16 @@ public class Sorter {
   }
   
   public static <T extends Comparable<T>> void quickSort(T[] items) {
+    StdRandom.shuffle(items);
+    sort(items, 0, items.length - 1);
     
-    
+  }
+  
+  private static <T extends Comparable<T>> void sort(T[] items, int lo, int hi) {
+    if (hi <= lo) return;
+    int j = partition(items, lo, hi);
+    sort(items, lo, j-1);
+    sort(items, j+1, hi);
   }
   
   private static <T extends Comparable<T>> int partition(T[] items, int lo, int hi) {
