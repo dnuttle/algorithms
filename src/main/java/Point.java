@@ -15,19 +15,27 @@ public class Point implements Comparable<Point> {
   }
   
   public void draw() {
-    StdDraw.setPenRadius(0.01);
+    StdDraw.setPenRadius(0.002);
+    StdDraw.setPenColor();
     StdDraw.point(x, y);
   }
   
   private void drawBig() {
-    StdDraw.setPenRadius(0.02);
+    StdDraw.setPenRadius(0.015);
     StdDraw.setPenColor(Color.RED);
     StdDraw.point(x, y);
     StdDraw.setPenColor();
   }
   
   public void drawTo(Point that) {
-    StdDraw.setPenRadius();
+    StdDraw.setPenRadius(0.001);
+    StdDraw.setPenColor(Color.RED);
+    StdDraw.line(x, y, that.x, that.y);
+  }
+  
+  private void drawToBig(Point that) {
+    StdDraw.setPenRadius(0.005);
+    StdDraw.setPenColor(Color.RED);
     StdDraw.line(x, y, that.x, that.y);
   }
   
@@ -49,18 +57,17 @@ public class Point implements Comparable<Point> {
   
   public double slopeTo(Point that) {
     if (compareTo(that) == 0) {
-      //StdOut.println("NEG");
+      //Two points are identical
       return Double.NEGATIVE_INFINITY;
     }
     if (x == that.x) {
-      //StdOut.println("POS");
+      //Two points have the same x value but different y values
       return Double.POSITIVE_INFINITY;
     }
-    double slope = ((double)y - (double)that.y) / ((double)x - (double)that.x); 
+    double slope = (double)(y - that.y) / (double)(x - that.x); 
     if (slope == 0) {
       return (1.0 - 1.0) / 1.0;
     }
-    //StdOut.printf("y: %d-%d, x: %d-%d, slope:%.3f%n", y, that.y, x, that.x, slope);
     return slope;
   }
   
@@ -78,10 +85,11 @@ public class Point implements Comparable<Point> {
     }
     @Override
     public int compare(Point p1, Point p2) {
-      //StdOut.println("p1: " + p1 + "(" + p.slopeTo(p1) + ") p2: " + p2 + "(" + p.slopeTo(p2) + ")");
-      if (p.slopeTo(p1) > p.slopeTo(p2)) {
+      double slope1 = p.slopeTo(p1);
+      double slope2 = p.slopeTo(p2);
+      if (slope1 > slope2) {
         return 1;
-      } else if (p.slopeTo(p1) < p.slopeTo(p2)) {
+      } else if (slope1 < slope2) {
         return -1;
       }
       return 0;

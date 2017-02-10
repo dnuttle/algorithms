@@ -1,3 +1,5 @@
+import edu.princeton.cs.algs4.StdDraw;
+
 public class LineSegment {
 
   private Point p;
@@ -13,6 +15,12 @@ public class LineSegment {
     q.draw();
     p.drawTo(q);
   }
+  private void drawBig() {
+    p.draw();
+    q.draw();
+    p.drawTo(q);
+  }
+  
   
   @Override
   public String toString() {
