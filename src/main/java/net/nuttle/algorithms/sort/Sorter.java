@@ -123,4 +123,24 @@ public class Sorter {
       else a[k] = a[i++];
     }
   }
+  
+  public static <T extends Comparable<T>> void quickSort(T[] items) {
+    
+    
+  }
+  
+  private static <T extends Comparable<T>> int partition(T[] items, int lo, int hi) {
+    int i = lo;
+    int j = hi + 1;
+    T v = items[lo];
+    
+    while (true) {
+      while (less(items[++i], v)) if (i==hi) break;
+      while (less(v, items[--j])) if (j==lo) break;
+      if (i >= j) break;
+      swap(i, j, items);
+    }
+    swap(lo, j, items);
+    return j;
+  }
 }
