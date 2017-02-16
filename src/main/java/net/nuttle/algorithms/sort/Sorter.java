@@ -2,6 +2,9 @@ package net.nuttle.algorithms.sort;
 
 import static net.nuttle.algorithms.sort.AbstractSort.less;
 import static net.nuttle.algorithms.sort.AbstractSort.swap;
+
+import java.util.Arrays;
+
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.Stopwatch;
@@ -9,7 +12,7 @@ import edu.princeton.cs.algs4.Stopwatch;
 public class Sorter {
 
   public static void main(String[] args) throws SortException {
-    int n = 10000;
+    int n = 40000;
     Integer[] ints = getRandoms(n);
     Stopwatch s = new Stopwatch();
     //bubbleSort(ints);
@@ -19,8 +22,23 @@ public class Sorter {
     selectionSort(ints);
     StdOut.printf("Sorted %d integers with selection sort in %.3f seconds%n", n, s.elapsedTime());
     ints = getRandoms(n);
+    //printArray(ints);
     s = new Stopwatch();
+    Integer[] copy = new Integer[n];
+    for (int i = 0; i < n; i++) {
+      copy[i] = ints[i];
+    }
+    Arrays.sort(copy);
     insertionSort(ints);
+    if (!Arrays.equals(copy, ints)) {
+      StdOut.println("NOT EQUAL");
+      for (int i = 0; i < n; i++) {
+        if (!copy[i].equals(ints[i])) {
+          StdOut.println(copy[i] + ", " + ints[i] + " at " + i);
+        }
+      }
+    }
+    //printArray(ints);
     StdOut.printf("Sorted %d integers with insertion sort in %.3f seconds%n", n, s.elapsedTime());
     ints = getRandoms(n);
     s = new Stopwatch();
@@ -30,6 +48,11 @@ public class Sorter {
     s = new Stopwatch();
     mergeSort(ints);
     StdOut.printf("Sorted %d integers with merge sort in %.3f seconds%n", n, s.elapsedTime());
+    ints = getRandoms(n);
+    s = new Stopwatch();
+    quickSort(ints);
+    StdOut.printf("Sorted %d integers with quick sort in %.3f seconds%n", n, s.elapsedTime());
+    
   }
 
   private static Integer[] getRandoms(int n) {
@@ -61,19 +84,22 @@ public class Sorter {
           min = j;
         }
       }
-      if (min != i) {
-        swap(i, min, items);
-      }
+      swap(i, min, items);
     }
   }
   
   public static <T extends Comparable<T>> void insertionSort(T[] items) {
     int n = items.length;
     for (int i = 0; i < n; i++) {
-      for (int j = i; j >= 1; j--) {
-        if (less(items[j], items[j-1])) {
-          swap(j, j-1, items);
+      T curr = items[i];
+      for (int j = i; j >= 1 ; j--) {
+        if (less(curr, items[j-1])) {
+          items[j] = items[j-1];
+          if (j == 1) {
+            items[0] = curr;
+          }
         } else {
+          items[j] = curr;
           break;
         }
       }
@@ -151,4 +177,17 @@ public class Sorter {
     swap(lo, j, items);
     return j;
   }
+
+  public static <T extends Comparable<T>> void printArray(T[] items) {
+    if (items.length > 100) {
+      StdOut.println("Array > 100, too long");
+      return;
+    }
+    StringBuilder sb = new StringBuilder();
+    for (T item : items) {
+      sb.append(item).append(" :|: ");
+    }
+    StdOut.println(sb.toString());
+  }
+
 }
