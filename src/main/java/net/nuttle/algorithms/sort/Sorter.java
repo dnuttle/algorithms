@@ -151,4 +151,25 @@ public class Sorter {
     swap(lo, j, items);
     return j;
   }
+  
+  public static <T extends Comparable<T>> void heapSort(T[] items) {
+    
+  }
+  
+  private static <T extends Comparable<T>> void swim(int k, T[] items) {
+    while (k > 1 && less(items[(k / 2) - 1], items[k - 1])) {
+      swap((k / 2) - 1, k - 1, items);
+      k = k / 2;
+    }
+  }
+  
+  private static <T extends Comparable<T>> void sink(int k, T[] items, int size) {
+    while (2 * k <= size) {
+      int j = 2 * k;
+      if (j < size && less(items[j+1], items[j])) j++;
+      if (!less(items[k-1], items[j-1])) break;
+      swap(k-1, j-1, items);
+      k = j;
+    }
+  }
 }
