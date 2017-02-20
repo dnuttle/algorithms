@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
 
 public class SymbolTable<K extends Comparable<K>, V> {
   
   private Node root;
   
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
     SymbolTable<String, String> tbl = new SymbolTable<>();
     tbl.put("f", "f");
     tbl.put("q", "q");
@@ -20,10 +21,42 @@ public class SymbolTable<K extends Comparable<K>, V> {
     tbl.put("d", "d");
     tbl.put("a", "a");
     tbl.put("g", "g");
+    tbl.put("a",  "a");
     for (String key : tbl.keys()) {
       StdOut.println(key);
     }
+    if (false) {
+      return;
+    }
+    /**
+     * Demonstrates how Hibbard deltion makes the tree unbalanced.  The ratio of nodes 
+     * on one side to the other is consistently large after a large number of deletes,
+     * even if only to delete a value and then put it right back.
+     */
+    for (int k = 0; k < 20; k++) {
+      SymbolTable<Integer, Integer> st2 = new SymbolTable<>();
+      for (int i = 0; i < 10000; i++) {
+        int val = StdRandom.uniform(1000);
+        st2.put(val, i);
+      }
+      for (int i = 0; i < 1000000; i++) {
+        int val = StdRandom.uniform(1000);
+        st2.delete(val);
+        st2.put(val,  i);
+      }
+      if (st2.size(st2.root.right) == 0) {
+        StdOut.println("Ratio: NaN");
+      } else {
+        double ratio = (double) st2.size(st2.root.left) / (double) st2.size(st2.root.right);
+        if (ratio < 1) {
+          ratio = 1.0 / ratio;
+        }
+        StdOut.println("Ratio: " + String.format("%.3f", ratio));
+      }
+    }
   }
+  
+  
   
   public void put(K key, V value) {
     root = put(root, key, value);
@@ -57,7 +90,7 @@ public class SymbolTable<K extends Comparable<K>, V> {
   
   public Node deleteMin(Node x) {
     if (x.left == null) return x.right;
-    x = deleteMin(x.left);
+    x.left = deleteMin(x.left);
     x.n = 1 + size(x.left) + size(x.right);
     return x;
   }
@@ -79,6 +112,7 @@ public class SymbolTable<K extends Comparable<K>, V> {
       x.right = deleteMin(t.right);
       x.left = t.left;
     }
+    x.n = size(x.left) + size(x.right) + 1; 
     return x;
   }
   
