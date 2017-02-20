@@ -78,10 +78,22 @@ public class SymbolTable<K extends Comparable<K>, V> {
   
   private V get(Node x, K key) {
     if (x == null) return null;
-    int cmp = x.key.compareTo(key);
+    int cmp = key.compareTo(x.key);
     if (cmp < 0) return get(x.left, key);
     else if (cmp > 0) return get(x.right, key);
     else return x.value;
+  }
+  
+  public int rank(K key) {
+    return rank(key, root);
+  }
+  
+  private int rank(K key, Node x) {
+    if (x == null) return 0;
+    int cmp = key.compareTo(x.key);
+    if (cmp < 0) return rank(key, x.left);
+    else if (cmp > 0) return 1 + size(x.left) + rank(key, x.right);
+    else return size(x.left);
   }
   
   public void deleteMin(K key) {
@@ -175,18 +187,6 @@ public class SymbolTable<K extends Comparable<K>, V> {
     return x.n;
   }
   
-  private Node maxList(Node x, List<K> keys) {
-    if (x.right == null) return x;
-    keys.add(x.key);
-    return max(x.right);
-  }
-  
-  private Node minList(Node x, List<K> keys) {
-    if (x.left == null) return x;
-    keys.add(x.key);
-    return max(x.left);
-  }
-
   private Iterable<K> keys() {
     List<K> keys = new ArrayList<>();
     keys(root, keys);
