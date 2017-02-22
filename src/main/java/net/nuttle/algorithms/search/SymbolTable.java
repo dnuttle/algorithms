@@ -168,7 +168,7 @@ public class SymbolTable<K extends Comparable<K>, V> {
   
   private boolean contains(Node x, K key)  {
     if (x == null)  return false;
-    int cmp = x.key.compareTo(key);
+    int cmp = key.compareTo(x.key);
     if (cmp < 0) return contains(x.left, key);
     else if (cmp > 0) return contains(x.right, key);
     else return true;
@@ -187,7 +187,7 @@ public class SymbolTable<K extends Comparable<K>, V> {
     return x.n;
   }
   
-  private Iterable<K> keys() {
+  public Iterable<K> keys() {
     List<K> keys = new ArrayList<>();
     keys(root, keys);
     return keys;
