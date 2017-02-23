@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 
-public class BinarySearchTest {
+public class SymbolTableTest {
 
   @Test
   public void testPutGet() {
