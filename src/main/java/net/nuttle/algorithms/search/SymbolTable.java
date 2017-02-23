@@ -2,10 +2,19 @@ package net.nuttle.algorithms.search;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 
+/**
+ * Implementation of a symbol table using an unbalanced binary search tree.
+ * It's all fun and games, so long as the puts are random, until the deletions start.
+ * @author dnuttle
+ *
+ * @param <K> is the type of the keys
+ * @param <V> is the type of the values
+ */
 public class SymbolTable<K extends Comparable<K>, V> {
   
   private Node root;
@@ -21,11 +30,12 @@ public class SymbolTable<K extends Comparable<K>, V> {
     tbl.put("d", "d");
     tbl.put("a", "a");
     tbl.put("g", "g");
-    tbl.put("a",  "a");
+    tbl.put("a",  "last value set");
     for (String key : tbl.keys()) {
       StdOut.println(key);
     }
-    if (false) {
+    StdOut.println(tbl.delete("a"));
+    if (true) {
       return;
     }
     /**
@@ -107,16 +117,25 @@ public class SymbolTable<K extends Comparable<K>, V> {
     return x;
   }
   
-  public void delete(K key) {
-    root = delete(root, key);
+  /**
+   * My implementation differs from the book's in that it returns the value 
+   * of the deleted node, if the node is found, otherwise returns null.
+   * @param key
+   * @return
+   */
+  public V delete(K key) {
+    ValueWrapper av = new ValueWrapper();
+    root = delete(root, key, av);
+    return av.value;
   }
   
-  private Node delete(Node x, K key) {
+  private Node delete(Node x, K key, ValueWrapper av) {
     if (x == null) return null;
     int cmp = key.compareTo(x.key);
-    if (cmp < 0) x.left = delete(x.left, key);
-    else if (cmp > 0) x.right = delete(x.right, key);
+    if (cmp < 0) x.left = delete(x.left, key, av);
+    else if (cmp > 0) x.right = delete(x.right, key, av);
     else {
+      av.setValue(x.value);
       if (x.right == null) return x.left;
       if (x.left == null) return x.right;
       Node t = x;
@@ -211,6 +230,13 @@ public class SymbolTable<K extends Comparable<K>, V> {
       this.key = key;
       this.value = value;
       this.n = n;
+    }
+  }
+  
+  private class ValueWrapper {
+    private V value;
+    public void setValue(V value) {
+      this.value = value;
     }
   }
 
