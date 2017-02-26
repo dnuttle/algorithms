@@ -1,5 +1,7 @@
 package net.nuttle.algorithms.sort;
 
+import java.util.Arrays;
+
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.Stopwatch;
@@ -39,9 +41,12 @@ public abstract class AbstractSort<T extends Comparable<T>> implements Sort<T> {
   
   public static double testSort(Sort<Integer> sorter, int n, boolean debug) throws SortException {
     Integer[] values = new Integer[n];
+    Integer[] orig = new Integer[n];
     for (int i = 0; i < n; i++) {
-      values[i] = StdRandom.uniform(n);
+      values[i] = i;
+      orig[i] = i;
     }
+    StdRandom.shuffle(values);
     if (debug) {
       printArray(values);
     }
@@ -51,6 +56,9 @@ public abstract class AbstractSort<T extends Comparable<T>> implements Sort<T> {
     }
     if (!isSorted(values)) {
       throw new SortException("Sorter failed to sort properly");
+    }
+    if (!Arrays.equals(orig, values)) {
+      throw new SortException("Sorter contains wrong values");
     }
     return elapsed;
   }

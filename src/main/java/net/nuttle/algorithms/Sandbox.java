@@ -1,10 +1,14 @@
 package net.nuttle.algorithms;
 
 import edu.princeton.cs.algs4.QuickFindUF;
+import edu.princeton.cs.algs4.StdOut;
 
 public class Sandbox {
 
   public static void main(String[] args) {
+    StdOut.println(2.0e-6 * 100000000.1);
+    StdOut.println((1 + 2.236)/ 2);
+
     //StdOut.printf("String is %09.4fabc\n", 16.1);
     /*
     while (!StdIn.isEmpty()) {
@@ -28,7 +32,7 @@ public class Sandbox {
     StdOut.println(s);
     in.close();
     */
-    testQUF();
+    //testQUF();
   }
   
   public static void testQUF() {
