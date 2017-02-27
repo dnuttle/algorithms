@@ -1,43 +1,57 @@
 package net.nuttle.algorithms;
 
-public class Stack<Item> {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-  Node head;
-
-  public static void main(String[] args) {
-    Stack<String> s = new Stack<>();
-    long start = System.currentTimeMillis();
-    int count = 0;
-    s.push("start");
-    for (int i = 0; i < 10000; i++) {
-      s.push("abcdefghijklmmnopqrstuvwxyz0123456789" + i);
-      s.pop();
-      count++;
-    }
-    System.out.println("Done " + (System.currentTimeMillis() - start) + " " + count);
-    System.out.println(s.head.value);
-  }
-  
-  
+public class Stack<Item> implements Iterable<Item> {
+  Node<Item> head;
+  int n;
   public void push(Item item) {
-    Node n = new Node(item);
-    n.next = head;
-    head = n;
+    Node<Item> node = new Node<>(item);
+    node.next = head;
+    head = node;
+    n++;
   }
-  
   public Item pop() {
+    if (head == null) throw new NoSuchElementException("stack is empty");
     Item item = head.value;
     head = head.next;
-    head.next = null;
+    n--;
     return item;
   }
-  private class Node {
-    Node next;
+  public boolean isEmpty() {
+    return head == null;
+  }
+  public int size() {
+    return n;
+  }
+  public Item peek() {
+    if (head == null) throw new NoSuchElementException("stack is empty");
+    return head.value;
+  }
+  @Override
+  public Iterator<Item> iterator() {
+    return new StackIterator(head);
+  }
+  private static class Node<Item> {
+    Node<Item> next;
     Item value;
-    
     public Node(Item value) {
       this.value = value;
     }
-    
+  }
+  private class StackIterator implements Iterator<Item> {
+    Node<Item> node;
+    public StackIterator(Node<Item> first) {
+      this.node = first;
+    }
+    public boolean hasNext() {
+      return node != null;
+    }
+    public Item next() {
+      Item item = node.value;
+      node = node.next;
+      return item;
+    }
   }
 }

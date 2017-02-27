@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import edu.princeton.cs.algs4.In;
@@ -10,35 +9,27 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class Solver {
 
-  private static String rscPath = null;
+  //private static String rscPath = null;
 
-  private MinPQ<SearchNode> pq;
-  private MinPQ<SearchNode> pqTwin;
-  private int moves = 0;
-  private int solveMoves = -1;
-  private boolean solvable;
-  private static boolean debug = false;
   private List<Board> solution;
   
   public Solver(Board initial) {
+    MinPQ<SearchNode> pq = new MinPQ<>();
+    MinPQ<SearchNode> pqTwin = new MinPQ<>();
     pq = new MinPQ<>();
     pqTwin = new MinPQ<>();
     pq.insert(new SearchNode(initial, null));
     pqTwin.insert(new SearchNode(initial.twin(), null));
     int n = initial.dimension();
-    debug("Initial:");
-    debug(initial);
-    solve();
+    solve(pq, pqTwin);
   }
   
-  private void solve() {
+  private void solve(MinPQ<SearchNode> pq, MinPQ<SearchNode> pqTwin) {
     while (true) {
       SearchNode min = pq.delMin();
       SearchNode minTwin = pqTwin.delMin();
       if (min.board.isGoal()) {
-        solveMoves = moves;
         //debug("FOUND SOLUTION");
-        solvable = true;
         solution = new ArrayList<>();
         SearchNode curr = min;
         while(curr != null) {
@@ -46,7 +37,6 @@ public class Solver {
           curr = curr.prev;
         }
         Collections.reverse(solution);
-        solveMoves = solution.size() - 1;
         pq = null;
         pqTwin = null;
         return;
@@ -77,11 +67,15 @@ public class Solver {
   }
   
   public boolean isSolvable() {
-    return solvable;
+    if (solution != null && solution.size() > 0) {
+      return solution.get(solution.size() - 1).isGoal();
+    }
+    return false;
   }
   
   public int moves() {
-    return solveMoves;
+    if (solution == null) return -1;
+    return solution.size() - 1;
   }
   
   public Iterable<Board> solution() {
@@ -89,7 +83,6 @@ public class Solver {
   }
   
   public static void main(String[] args) {
-    rscPath = System.getProperty("user.dir") + "/src/test/resources/8puzzle/";
     myMain2(args);
   }
   
@@ -110,6 +103,7 @@ public class Solver {
   }
   
   private static void testFile(String file) {
+    String rscPath = System.getProperty("user.dir") + "/src/test/resources/8puzzle/";
     In in = new In(rscPath + file);
     int n = in.readInt();
     int[][] blocks = new int[n][n];
@@ -134,6 +128,7 @@ public class Solver {
   }
   
   private static void myMain2(String[] args) {
+    String rscPath = System.getProperty("user.dir") + "/src/test/resources/8puzzle/";
     for (int idx = 0; idx < 51; idx++) {
       String file = null;
       try {
@@ -190,7 +185,7 @@ public class Solver {
   }
   
   private void debug(Object msg) {
-    if (debug) StdOut.println(msg.toString());
+    StdOut.println(msg.toString());
   }
   
   private static class SearchNode implements Comparable<SearchNode> {

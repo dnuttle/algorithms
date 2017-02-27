@@ -7,10 +7,8 @@ import edu.princeton.cs.algs4.StdOut;
 public class Board {
 
   private char [][] blocks;
-  private int manhattan;
-  private int hamming;
-  private Board twin;
-  private List<Board> neighbors;
+  //private Board twin;
+  //private List<Board> neighbors;
   
   public Board(int[][] blocks) {
     this.blocks = new char[blocks.length][blocks.length];
@@ -19,13 +17,14 @@ public class Board {
         this.blocks[i][j] = (char) blocks[i][j];
       }
     }
-    init();
+    //init();
   }
   
   public int dimension() {
     return blocks.length;
   }
   
+  /*
   private void init() {
     manhattan = 0;
     hamming = 0;
@@ -47,20 +46,53 @@ public class Board {
       }
     }
   }
+  */
   
   public int hamming() {
+    int hamming = 0;
+    for (int i = 0; i < blocks.length; i++) {
+      for (int j = 0; j < blocks.length; j++) {
+        if (blocks[i][j] == 0) {
+          continue;
+        } else {
+          int actualRow = (blocks[i][j] - 1) / blocks.length; 
+          int expectedRow = i;
+          int actualCol = blocks[i][j] - actualRow * blocks.length;
+          int expectedCol = j + 1;
+          hamming += (actualRow == expectedRow && actualCol == expectedCol) ? 0 : 1;
+        }
+      }
+    }
     return hamming;
   }
   
   public int manhattan() {
+    int manhattan = 0;
+    for (int i = 0; i < blocks.length; i++) {
+      for (int j = 0; j < blocks.length; j++) {
+        if (blocks[i][j] == 0) {
+          continue;
+        } else {
+          int actualRow = (blocks[i][j] - 1) / blocks.length; 
+          int expectedRow = i;
+          int actualCol = blocks[i][j] - actualRow * blocks.length;
+          int expectedCol = j + 1;
+          int rowDiff = Math.abs(actualRow - expectedRow);
+          int colDiff = Math.abs(actualCol - expectedCol);
+          manhattan += rowDiff;
+          manhattan += colDiff;
+        }
+      }
+    }
     return manhattan;
   }
   
   public boolean isGoal() {
-    return manhattan == 0;
+    return manhattan() == 0;
   }
   
   public Board twin() {
+    Board twin = null;
     if (twin == null) {
       int[][] b = new int[blocks.length][blocks.length];
       for (int i = 0; i < blocks.length; i++) {
@@ -114,14 +146,11 @@ public class Board {
   }
   
   public Iterable<Board> neighbors() {
-    if (neighbors == null) {
-      findNeighbors();
-    }
-    return neighbors;
+    return findNeighbors();
   }
   
-  private void findNeighbors() {
-    neighbors = new ArrayList<>();
+  private List<Board> findNeighbors() {
+    List<Board> neighbors = new ArrayList<>();
     int zeroRow = -1;
     int zeroCol = -1;
     for (int i = 0; i < blocks.length; i++) {
@@ -161,6 +190,7 @@ public class Board {
       neighbors.add(neighbor);
     }
     neighbors = Collections.unmodifiableList(neighbors);
+    return neighbors;
   }
   
   private int[][] cloneBlocks() {

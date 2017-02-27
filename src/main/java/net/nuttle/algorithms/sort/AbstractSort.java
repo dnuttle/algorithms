@@ -41,12 +41,12 @@ public abstract class AbstractSort<T extends Comparable<T>> implements Sort<T> {
   
   public static double testSort(Sort<Integer> sorter, int n, boolean debug) throws SortException {
     Integer[] values = new Integer[n];
-    Integer[] orig = new Integer[n];
     for (int i = 0; i < n; i++) {
       values[i] = i;
-      orig[i] = i;
     }
     StdRandom.shuffle(values);
+    Integer[] ref = Arrays.copyOf(values, values.length);
+    Arrays.sort(ref);
     if (debug) {
       printArray(values);
     }
@@ -54,12 +54,8 @@ public abstract class AbstractSort<T extends Comparable<T>> implements Sort<T> {
     if (debug) {
       printArray(values);
     }
-    if (!isSorted(values)) {
-      throw new SortException("Sorter failed to sort properly");
-    }
-    if (!Arrays.equals(orig, values)) {
-      throw new SortException("Sorter contains wrong values");
-    }
+    if (!isSorted(values))  throw new SortException("Sorter failed to sort properly");
+    if (!Arrays.equals(values, ref)) throw new SortException("Sorted array not equal to reference sort");
     return elapsed;
   }
   

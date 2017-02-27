@@ -12,49 +12,65 @@ import edu.princeton.cs.algs4.Stopwatch;
 public class Sorter {
 
   public static void main(String[] args) throws SortException {
-    int n = 40000;
+    int n = 10000;
+    Stopwatch s;
+    StdRandom.setSeed(1);
     Integer[] ints = getRandoms(n);
-    Stopwatch s = new Stopwatch();
-    //bubbleSort(ints);
-    //StdOut.printf("Sorted %d integers with bubble sort in %.3f seconds%n", n, s.elapsedTime());
-    //ints = getRandoms(n);
-    //s = new Stopwatch();
-    selectionSort(ints);
-    StdOut.printf("Sorted %d integers with selection sort in %.3f seconds%n", n, s.elapsedTime());
-    ints = getRandoms(n);
-    //printArray(ints);
+    Integer[] ints2;
+    Integer[] ref = Arrays.copyOf(ints, ints.length);
+    Arrays.sort(ref);
+
+    ints2 = Arrays.copyOf(ints, ints.length);
     s = new Stopwatch();
-    Integer[] copy = new Integer[n];
-    for (int i = 0; i < n; i++) {
-      copy[i] = ints[i];
-    }
-    Arrays.sort(copy);
-    insertionSort(ints);
-    if (!Arrays.equals(copy, ints)) {
+    bubbleSort(ints2);
+    StdOut.printf("Sorted %d integers with bubble sort in %.3f seconds%n", n, s.elapsedTime());
+    if (!Arrays.equals(ref, ints2)) {
       StdOut.println("NOT EQUAL");
-      for (int i = 0; i < n; i++) {
-        if (!copy[i].equals(ints[i])) {
-          StdOut.println(copy[i] + ", " + ints[i] + " at " + i);
-        }
-      }
     }
+
+    ints2 = Arrays.copyOf(ints, ints.length);
+    s = new Stopwatch();
+    selectionSort(ints2);
+    StdOut.printf("Sorted %d integers with selection sort in %.3f seconds%n", n, s.elapsedTime());
+    if (!Arrays.equals(ref, ints2)) {
+      StdOut.println("NOT EQUAL");
+    }
+
+    ints2 = Arrays.copyOf(ints,  ints.length);
     //printArray(ints);
+    s = new Stopwatch();
+    insertionSort(ints2);
     StdOut.printf("Sorted %d integers with insertion sort in %.3f seconds%n", n, s.elapsedTime());
-    ints = getRandoms(n);
+    if (!Arrays.equals(ref, ints2)) {
+      StdOut.println("NOT EQUAL");
+    }
+
+    ints2 = Arrays.copyOf(ints, ints.length);
     s = new Stopwatch();
-    shellSort(ints);
+    shellSort(ints2);
     StdOut.printf("Sorted %d integers with shell sort in %.3f seconds%n", n, s.elapsedTime());
-    ints = getRandoms(n);
+    if (!Arrays.equals(ref, ints2)) {
+      StdOut.println("NOT EQUAL");
+    }
+
+    ints2 = Arrays.copyOf(ints, ints.length);
     s = new Stopwatch();
-    mergeSort(ints);
+    mergeSort(ints2);
     StdOut.printf("Sorted %d integers with merge sort in %.3f seconds%n", n, s.elapsedTime());
-    ints = getRandoms(n);
+    if (!Arrays.equals(ref, ints2)) {
+      StdOut.println("NOT EQUAL");
+    }
+
+    ints2 = Arrays.copyOf(ints, ints.length);
     s = new Stopwatch();
-    quickSort(ints);
+    quickSort(ints2);
     StdOut.printf("Sorted %d integers with quick sort in %.3f seconds%n", n, s.elapsedTime());
+    if (!Arrays.equals(ref, ints2)) {
+      StdOut.println("NOT EQUAL");
+    }
     
   }
-
+  
   private static Integer[] getRandoms(int n) {
     Integer[] ints = new Integer[n];
     for (int i = 0; i < n; i++) {
@@ -62,7 +78,6 @@ public class Sorter {
     }
     return ints;
   }
-  
   
   public static <T extends Comparable<T>> void bubbleSort(T[] items) {
     int n = items.length;
@@ -146,7 +161,7 @@ public class Sorter {
       if (i > mid) a[k] = aux[j++];
       else if (j > hi) a[k] = aux[i++];
       else if (less(aux[j], aux[i])) a[k] = aux[j++];
-      else a[k] = a[i++];
+      else a[k] = aux[i++];
     }
   }
   
@@ -210,5 +225,5 @@ public class Sorter {
     }
     StdOut.println(sb.toString());
   }
-
+  
 }
