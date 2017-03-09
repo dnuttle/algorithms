@@ -5,9 +5,9 @@ import static net.nuttle.algorithms.sort.AbstractSort.swap;
 
 import java.util.Arrays;
 
+import net.nuttle.algorithms.util.Stopwatch;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.Stopwatch;
 
 public class Sorter {
 
@@ -21,50 +21,66 @@ public class Sorter {
     Arrays.sort(ref);
 
     ints2 = Arrays.copyOf(ints, ints.length);
-    s = new Stopwatch();
+    s = Stopwatch.getStartedInstance();
     bubbleSort(ints2);
-    StdOut.printf("Sorted %d integers with bubble sort in %.3f seconds%n", n, s.elapsedTime());
+    s.stop();
+    StdOut.printf("Sorted %d integers with bubble sort in %.3f seconds%n", n, s.elapsedSecs());
     if (!Arrays.equals(ref, ints2)) {
       StdOut.println("NOT EQUAL");
     }
 
     ints2 = Arrays.copyOf(ints, ints.length);
-    s = new Stopwatch();
+    s = Stopwatch.getStartedInstance();
     selectionSort(ints2);
-    StdOut.printf("Sorted %d integers with selection sort in %.3f seconds%n", n, s.elapsedTime());
+    s.stop();
+    StdOut.printf("Sorted %d integers with selection sort in %.3f seconds%n", n, s.elapsedSecs());
     if (!Arrays.equals(ref, ints2)) {
       StdOut.println("NOT EQUAL");
     }
 
     ints2 = Arrays.copyOf(ints,  ints.length);
     //printArray(ints);
-    s = new Stopwatch();
+    s = Stopwatch.getStartedInstance();
     insertionSort(ints2);
-    StdOut.printf("Sorted %d integers with insertion sort in %.3f seconds%n", n, s.elapsedTime());
+    s.stop();
+    StdOut.printf("Sorted %d integers with insertion sort in %.3f seconds%n", n, s.elapsedSecs());
+    if (!Arrays.equals(ref, ints2)) {
+      StdOut.println("NOT EQUAL");
+    }
+
+    ints2 = Arrays.copyOf(ints,  ints.length);
+    //printArray(ints);
+    s = Stopwatch.getStartedInstance();
+    insertion(ints2);
+    s.stop();
+    StdOut.printf("Sorted %d integers with insertion sort in %.3f seconds%n", n, s.elapsedSecs());
     if (!Arrays.equals(ref, ints2)) {
       StdOut.println("NOT EQUAL");
     }
 
     ints2 = Arrays.copyOf(ints, ints.length);
-    s = new Stopwatch();
+    s = Stopwatch.getStartedInstance();
     shellSort(ints2);
-    StdOut.printf("Sorted %d integers with shell sort in %.3f seconds%n", n, s.elapsedTime());
+    s.stop();
+    StdOut.printf("Sorted %d integers with shell sort in %.3f seconds%n", n, s.elapsedSecs());
     if (!Arrays.equals(ref, ints2)) {
       StdOut.println("NOT EQUAL");
     }
 
     ints2 = Arrays.copyOf(ints, ints.length);
-    s = new Stopwatch();
+    s = Stopwatch.getStartedInstance();
     mergeSort(ints2);
-    StdOut.printf("Sorted %d integers with merge sort in %.3f seconds%n", n, s.elapsedTime());
+    s.stop();
+    StdOut.printf("Sorted %d integers with merge sort in %.3f seconds%n", n, s.elapsedSecs());
     if (!Arrays.equals(ref, ints2)) {
       StdOut.println("NOT EQUAL");
     }
 
     ints2 = Arrays.copyOf(ints, ints.length);
-    s = new Stopwatch();
+    s = Stopwatch.getStartedInstance();
     quickSort(ints2);
-    StdOut.printf("Sorted %d integers with quick sort in %.3f seconds%n", n, s.elapsedTime());
+    s.stop();
+    StdOut.printf("Sorted %d integers with quick sort in %.3f seconds%n", n, s.elapsedSecs());
     if (!Arrays.equals(ref, ints2)) {
       StdOut.println("NOT EQUAL");
     }
@@ -103,6 +119,14 @@ public class Sorter {
     }
   }
   
+  /**
+   * Did I come up with the optimization?  I can't remember.  But storing curr 
+   * makes it significantly faster (though of course it's still quadratic).
+   * So in the face of diminishing gains as n increases, the simpler version may be preferable.
+   * Also:  If the list is already sorted, or nearly sorted, this would be a performance penalty,
+   * because there would be unneeded array references.
+   * @param items
+   */
   public static <T extends Comparable<T>> void insertionSort(T[] items) {
     int n = items.length;
     for (int i = 0; i < n; i++) {
@@ -117,6 +141,16 @@ public class Sorter {
           items[j] = curr;
           break;
         }
+      }
+    }
+  }
+  
+  public static <T extends Comparable<T>> void insertion(T[] items) {
+    int n = items.length;
+    for (int i = 0; i < n; i++) {
+      for (int j = i; j >= 1; j--) {
+        if (less(items[j], items[j-1])) swap(j, j-1, items);
+        else break;
       }
     }
   }

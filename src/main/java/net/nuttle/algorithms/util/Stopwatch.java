@@ -21,16 +21,16 @@ public class Stopwatch {
   }
   
   public void start() {
-    start = System.currentTimeMillis();
     running = true;
+    start = System.currentTimeMillis();
   }
   
   public void stop() {
-    elapsed += (System.currentTimeMillis() - start);
+    long now = System.currentTimeMillis();
+    elapsed += (now - start);
     running = false;
   }
   
-  @SuppressWarnings("unused")
   public long elapsed() {
     return elapsed;
   }
