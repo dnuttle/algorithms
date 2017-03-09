@@ -12,77 +12,63 @@ import edu.princeton.cs.algs4.StdRandom;
 public class Sorter {
 
   public static void main(String[] args) throws SortException {
-    int n = 10000;
-    Stopwatch s;
     StdRandom.setSeed(1);
-    Integer[] ints = getRandoms(n);
-    Integer[] ints2;
-    Integer[] ref = Arrays.copyOf(ints, ints.length);
+    int n = 10000;
+    Integer[] ints;
+    Integer[] ref = getShuffled(n);
     Arrays.sort(ref);
-
-    ints2 = Arrays.copyOf(ints, ints.length);
+    Stopwatch s;
+    
+    ints = getShuffled(n);
     s = Stopwatch.getStartedInstance();
-    bubbleSort(ints2);
+    bubbleSort(ints);
     s.stop();
     StdOut.printf("Sorted %d integers with bubble sort in %.3f seconds%n", n, s.elapsedSecs());
-    if (!Arrays.equals(ref, ints2)) {
-      StdOut.println("NOT EQUAL");
+    if (!Arrays.equals(ref, ints)) {
+      StdOut.println("Insertion sort failed");
     }
 
-    ints2 = Arrays.copyOf(ints, ints.length);
+    ints = getShuffled(n);
     s = Stopwatch.getStartedInstance();
-    selectionSort(ints2);
+    selectionSort(ints);
     s.stop();
     StdOut.printf("Sorted %d integers with selection sort in %.3f seconds%n", n, s.elapsedSecs());
-    if (!Arrays.equals(ref, ints2)) {
-      StdOut.println("NOT EQUAL");
+    if (!Arrays.equals(ref, ints)) {
+      StdOut.println("Insertion sort failed");
     }
 
-    ints2 = Arrays.copyOf(ints,  ints.length);
-    //printArray(ints);
+    ints = getShuffled(n);
     s = Stopwatch.getStartedInstance();
-    insertionSort(ints2);
+    insertionSort(ints);
     s.stop();
     StdOut.printf("Sorted %d integers with insertion sort in %.3f seconds%n", n, s.elapsedSecs());
-    if (!Arrays.equals(ref, ints2)) {
-      StdOut.println("NOT EQUAL");
+    if (!Arrays.equals(ref, ints)) {
+      StdOut.println("Insertion sort failed");
     }
 
-    ints2 = Arrays.copyOf(ints,  ints.length);
-    //printArray(ints);
+    ints = getShuffled(n);
     s = Stopwatch.getStartedInstance();
-    insertion(ints2);
-    s.stop();
-    StdOut.printf("Sorted %d integers with insertion sort in %.3f seconds%n", n, s.elapsedSecs());
-    if (!Arrays.equals(ref, ints2)) {
-      StdOut.println("NOT EQUAL");
-    }
-
-    ints2 = Arrays.copyOf(ints, ints.length);
-    s = Stopwatch.getStartedInstance();
-    shellSort(ints2);
+    shellSort(ints);
     s.stop();
     StdOut.printf("Sorted %d integers with shell sort in %.3f seconds%n", n, s.elapsedSecs());
-    if (!Arrays.equals(ref, ints2)) {
-      StdOut.println("NOT EQUAL");
+    if (!Arrays.equals(ref, ints)) {
+      StdOut.println("Shell sort failed");
     }
-
-    ints2 = Arrays.copyOf(ints, ints.length);
+    ints = getShuffled(n);
     s = Stopwatch.getStartedInstance();
-    mergeSort(ints2);
+    mergeSort(ints);
     s.stop();
     StdOut.printf("Sorted %d integers with merge sort in %.3f seconds%n", n, s.elapsedSecs());
-    if (!Arrays.equals(ref, ints2)) {
-      StdOut.println("NOT EQUAL");
+    if (!Arrays.equals(ref, ints)) {
+      StdOut.println("Merge sort failed");
     }
-
-    ints2 = Arrays.copyOf(ints, ints.length);
+    ints = getShuffled(n);
     s = Stopwatch.getStartedInstance();
-    quickSort(ints2);
+    quickSort(ints);
     s.stop();
     StdOut.printf("Sorted %d integers with quick sort in %.3f seconds%n", n, s.elapsedSecs());
-    if (!Arrays.equals(ref, ints2)) {
-      StdOut.println("NOT EQUAL");
+    if (!Arrays.equals(ref, ints)) {
+      StdOut.println("Insertion sort failed");
     }
     
   }
@@ -94,6 +80,16 @@ public class Sorter {
     }
     return ints;
   }
+  
+  private static Integer[] getShuffled(int n) {
+    Integer[] ints = new Integer[n];
+    for (int i = 0; i < n; i++) {
+      ints[i] = i;
+    }
+    StdRandom.shuffle(ints);
+    return ints;
+  }
+  
   
   public static <T extends Comparable<T>> void bubbleSort(T[] items) {
     int n = items.length;
@@ -145,7 +141,7 @@ public class Sorter {
     }
   }
   
-  public static <T extends Comparable<T>> void insertion(T[] items) {
+  public static <T extends Comparable<T>> void insertionSortBasic(T[] items) {
     int n = items.length;
     for (int i = 0; i < n; i++) {
       for (int j = i; j >= 1; j--) {
@@ -154,7 +150,7 @@ public class Sorter {
       }
     }
   }
-  
+
   public static <T extends Comparable<T>> void shellSort(T[] items) {
     int n = items.length;
     int h = 1;
@@ -192,6 +188,16 @@ public class Sorter {
     int i = lo;
     int j = mid + 1;
     for (int k = lo; k <= hi; k++) {
+      /*
+       * As a mnemonic.
+       * Think of logic here like the file-based mergesort in Iridium.  We open up readers
+       * for two or more data files, and iterate through them, looking for the lowest current value
+       * in each; that value is written, and that reader is advanced to the next value.
+       * "if (i > mid)" is the same as "if this reader is exhausted"
+       * "else if (j > hi)" is the same as "if that reader is exhausted"
+       * "else if (less(aux[j], aux[i))" is the same as "if this reader has the lower value"
+       * "else" is the same as "the only alternative I have left is, that reader has the lower value"
+       */
       if (i > mid) a[k] = aux[j++];
       else if (j > hi) a[k] = aux[i++];
       else if (less(aux[j], aux[i])) a[k] = aux[j++];

@@ -9,6 +9,11 @@ public class Sandbox {
     StdOut.println(2.0e-6 * 100000000.1);
     StdOut.println((1 + 2.236)/ 2);
 
+    int i = 0;
+    for (i = 0; i < 3; i++) {
+      StdOut.println("i:" + i);
+    }
+    StdOut.println(i);
     //StdOut.printf("String is %09.4fabc\n", 16.1);
     /*
     while (!StdIn.isEmpty()) {
