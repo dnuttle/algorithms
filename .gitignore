@@ -4,6 +4,7 @@
 .settings/
 bin/
 build/
+repos/
 *.zip
 src/test/resources/percolation
 src/test/resources/collinear
